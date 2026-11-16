@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import path from 'node:path';
+const pages={home:'index',discover:'discover',places:'places',favorites:'favorites',evening:'evening',account:'account'};
+const template=fs.readFileSync('web/index.html','utf8');
+fs.mkdirSync('docs',{recursive:true});
+for(const [page,file] of Object.entries(pages))fs.writeFileSync(`docs/${file}.html`,template.replace('data-page="home"',`data-page="${page}"`));
+for(const name of fs.readdirSync('web'))if(/\.(js|css|svg)$/.test(name))fs.copyFileSync(path.join('web',name),path.join('docs',name));
+fs.mkdirSync('docs/assets',{recursive:true});
+fs.copyFileSync('web/assets/evening-hero-v3.jpg','docs/assets/evening-hero-v3.jpg');
+fs.writeFileSync('docs/.nojekyll','');
+console.log('GitHub Pages: 6 pages built in docs/.');
